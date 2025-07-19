@@ -29,5 +29,5 @@ jobs:
           git config user.email "github-actions@github.com"
           git add CONTRIBUTORS.md
           git commit -m "Update CONTRIBUTORS.md" || echo "No changes to commit"
-          git push https://x-access-token:${TOKEN}@github.com/${{ github.repository }} HEAD:main
+          git push https://abdulrafey5:${GH_PAT}@github.com/${{ github.repository }} HEAD:main
 
