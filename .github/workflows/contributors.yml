@@ -1,0 +1,29 @@
+name: Generate Contributors
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up jq
+        run: sudo apt-get install jq
+
+      - name: Generate contributors file
+        run: |
+          curl -s "https://api.github.com/repos/${{ github.repository }}/contributors" | jq -r '.[] | "- " + .login + " (" + .html_url + ")"' > CONTRIBUTORS.md
+
+      - name: Commit changes
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          git add CONTRIBUTORS.md
+          git commit -m "Update CONTRIBUTORS.md" || echo "No changes to commit"
+          git push
