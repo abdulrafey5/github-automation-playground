@@ -20,10 +20,15 @@ jobs:
         run: |
           curl -s "https://api.github.com/repos/${{ github.repository }}/contributors" | jq -r '.[] | "- " + .login + " (" + .html_url + ")"' > CONTRIBUTORS.md
 
-      - name: Commit changes
+     
+      - name: Commit and push changes
+        env:
+          TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           git config --global user.name 'github-actions'
           git config --global user.email 'github-actions@github.com'
           git add CONTRIBUTORS.md
           git commit -m "Update CONTRIBUTORS.md" || echo "No changes to commit"
-          git push
+          git remote set-url origin https://x-access-token:${TOKEN}@github.com/${{ github.repository }}
+          git push origin main
+
