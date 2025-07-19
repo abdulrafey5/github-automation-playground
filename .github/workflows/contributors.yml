@@ -13,12 +13,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set Git remote to use PAT
-        env:
-          TOKEN: ${{ secrets.GH_TOKEN }}
-        run: |
-          git remote set-url origin https://x-access-token:${TOKEN}@github.com/${{ github.repository }}
-
       - name: Set up jq
         run: sudo apt-get update && sudo apt-get install -y jq
 
@@ -29,6 +23,12 @@ jobs:
           curl -s -H "Authorization: token $TOKEN" \
             "https://api.github.com/repos/${{ github.repository }}/contributors" \
           | jq -r '.[] | "- " + .login + " (" + .html_url + ")"' > CONTRIBUTORS.md
+
+      - name: Set Git remote to use PAT (must be after checkout)
+        env:
+          TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          git remote set-url origin https://x-access-token:${TOKEN}@github.com/${{ github.repository }}
 
       - name: Commit and push changes
         run: |
