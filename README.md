@@ -1,3 +1,3 @@
 # github-automation-playground
 
-## Displays the Contributors list on each change
+### displays the contributors list on each change
